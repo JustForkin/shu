@@ -50,9 +50,7 @@ function updateAndUpload(url, cb) {
 
 }
 
-// module.exports = {
-// 	update          : update,
-// 	updateAndUpload : updateAndUpload
-// }
-
-update('fluuu.id');
+module.exports = {
+	update          : update,
+	updateAndUpload : updateAndUpload
+}
