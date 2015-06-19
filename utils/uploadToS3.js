@@ -72,5 +72,3 @@ function uploadSingleFile(filePath, cb) {
 module.exports = {
     uploadSingleFile : uploadSingleFile
 };
-
-uploadSingleFile('data/urls.json');
