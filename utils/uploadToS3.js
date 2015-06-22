@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 
-// config is coffee....
-require('coffee-script/register');
-
 var fs             = require('fs');
 var s3             = require('s3');
 var getCredentials = require('./getCredentials');

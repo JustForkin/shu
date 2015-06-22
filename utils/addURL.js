@@ -1,8 +1,5 @@
 #!/usr/bin/env node
 
-// config is coffee....
-require('coffee-script/register');
-
 var fs         = require('fs');
 var Hashids    = require('hashids');
 var argv       = require('yargs').argv;
