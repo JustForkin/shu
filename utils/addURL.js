@@ -2,14 +2,17 @@
 
 var _          = require('underscore');
 var fs         = require('fs');
+var path       = require('path');
 var Hashids    = require('hashids');
 var argv       = require('yargs').argv;
-var getURLs    = require('../app/utils/getURLs');
+var clipboard  = require('copy-paste');
 var uploadToS3 = require('./uploadToS3');
+var getURLs    = require('../app/utils/getURLs');
 var config     = require('../config/server');
 
-var URLsPath   = "data/urls.json";
-var newURLPath = null;
+var protocolRe = new RegExp('^https?:\/\/');
+var URLsPath   = path.join(__dirname, "..", "urls.json");
+var newURL     = null;
 
 function update(url, path, cb) {
 	getURLs(function(data) {
@@ -21,6 +24,16 @@ function update(url, path, cb) {
 			if (_.findWhere(data.urls, { id : path })) {
 				throw new Error('Sorry, that path is already in use...');
 			}
+		}
+
+		url = protocolRe.test(url) ? url.split(protocolRe)[1] : url;
+
+		var existingEntry = _.findWhere(data.urls, { url : url });
+		if (existingEntry && (!path || path === existingEntry.id)) {
+			newURL = config.REMOTE_URL + '/' + existingEntry.id;
+			return clipboard.copy(newURL, function() {
+				console.log("URL %s already shortened to %s (now copied to clipboard)", url, newURL);
+			});
 		}
 
 		data.urls.push(getNewEntry(url, path, data.urls.length+1));
@@ -35,10 +48,7 @@ function getNewEntry(url, path, index) {
 	var h = new Hashids(config.shortlinks.SALT, 3, config.shortlinks.ALPHABET);
     var id = path ? path : h.encode(index);
 
-    var protocolRe = new RegExp('^https?:\/\/');
-    url = protocolRe.test(url) ? url.split(protocolRe)[1] : url;
-
-    newURLPath = id;
+    newURL = config.REMOTE_URL + '/' + id;
 
     return {
 		id      : id,
@@ -46,6 +56,10 @@ function getNewEntry(url, path, index) {
 		url     : url,
 		created : new Date()
 	};
+}
+
+function removeTemporaryUrlsFile() {
+	fs.unlinkSync(URLsPath);
 }
 
 function updateAndUpload(url, path) {
@@ -58,11 +72,14 @@ function updateAndUpload(url, path) {
 			throw new Error('Issue adding new URL');
 		} else {
 			uploadToS3.uploadSingleFile(URLsPath, function() {
-				console.log("SUCCESS!! New URL at path %s", newURLPath);
+				clipboard.copy(newURL, function() {
+					removeTemporaryUrlsFile();
+					console.log("SUCCESS!! New URL at path %s (now copied to clipboard)", newURL);
+				});
 			});
 		}
 	});
 
 }
 
-updateAndUpload(argv.url, argv.path);
+updateAndUpload((argv.url || argv.u), (argv.path || argv.p));

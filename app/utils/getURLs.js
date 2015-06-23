@@ -3,7 +3,7 @@ var config  = require('../../config/server');
 
 function getURLs(cb) {
 
-    var dataURL = config.BUCKET_URL + config.URLS_DATA_PATH;
+    var dataURL = config.BUCKET_URL + '/' + config.URLS_DATA_PATH;
     var urls;
 
     request(dataURL, function(err, res, body) {
