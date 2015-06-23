@@ -1,3 +1,5 @@
+// this file is removed from version control
+
 config = module.exports;
 
 config.BUCKET     = 'add-your-bucket-name';

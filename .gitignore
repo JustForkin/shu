@@ -10,6 +10,7 @@ node_modules/
 .elasticbeanstalk/
 
 credentials.js
+config/user.js
 
 temp/
 
