@@ -3,7 +3,9 @@
 var fs             = require('fs');
 var s3             = require('s3');
 var getCredentials = require('./getCredentials');
-var config         = require('../config/server');
+
+var config_general = require('../config/general');
+var config_user    = require('../config/user');
 
 function getUploadParamsSingle(localFile, remoteFilePath, bucket) {
 
@@ -64,7 +66,7 @@ function uploadSingleFile(filePath, cb) {
 
     creds        = getCredentials();
     client       = getClient(creds);
-    uploadParams = getUploadParamsSingle(filePath, config.URLS_DATA_PATH, config.BUCKET);
+    uploadParams = getUploadParamsSingle(filePath, config_general.URLS_DATA_PATH, config_user.BUCKET);
 
     startUploader('uploadFile', client, uploadParams, cb);
 }

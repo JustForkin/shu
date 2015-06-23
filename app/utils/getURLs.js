@@ -1,9 +1,11 @@
 var request = require('request');
-var config  = require('../../config/server');
+
+var config_general = require('../../config/general');
+var config_user    = require('../../config/user');
 
 function getURLs(cb) {
 
-    var dataURL = config.BUCKET_URL + '/' + config.URLS_DATA_PATH;
+    var dataURL = config_user.BUCKET_URL + '/' + config_general.URLS_DATA_PATH;
     var urls;
 
     request(dataURL, function(err, res, body) {

@@ -7,7 +7,9 @@ var Hashids    = require('hashids');
 var clipboard  = require('copy-paste');
 var uploadToS3 = require('./uploadToS3');
 var getURLs    = require('../app/utils/getURLs');
-var config     = require('../config/server');
+
+var config_general = require('../config/general');
+var config_user    = require('../config/user');
 
 var argv = require('yargs')
 	.alias('u', 'url')
@@ -34,7 +36,7 @@ function update(url, path, cb) {
 
 		var existingEntry = _.findWhere(data.urls, { url : url });
 		if (existingEntry && (!path || path === existingEntry.id)) {
-			newURL = config.REMOTE_URL + '/' + existingEntry.id;
+			newURL = config_user.REMOTE_URL + '/' + existingEntry.id;
 			return clipboard.copy(newURL, function() {
 				console.log("URL %s already shortened to %s (now copied to clipboard)", url, newURL);
 			});
@@ -49,10 +51,10 @@ function update(url, path, cb) {
 }
 
 function getNewEntry(url, path, index) {
-	var h = new Hashids(config.shortlinks.SALT, 3, config.shortlinks.ALPHABET);
+	var h = new Hashids(config_general.shortlinks.SALT, 3, config_general.shortlinks.ALPHABET);
     var id = path ? path : h.encode(index);
 
-    newURL = config.REMOTE_URL + '/' + id;
+    newURL = config_user.REMOTE_URL + '/' + id;
 
     return {
 		id      : id,

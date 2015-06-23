@@ -2,10 +2,14 @@
 
 var cluster = require('cluster');
 var app     = require('./server');
-var config  = require('../config/server');
+
+var config_general = require('../config/general');
+var config_user    = require('../config/user');
 
 var workers = {};
 var count   = require('os').cpus().length;
+
+var appURL = config_general.PRODUCTION ? config_user.REMOTE_URL : 'http://'+config_general.express.ip+':'+config_general.express.port;
 
 function spawn() {
   worker = cluster.fork();
@@ -27,12 +31,12 @@ if (cluster.isMaster && process.env.NODE_ENV === 'production') {
 
 } else {
 
-	app.listen(config.express.port, config.express.ip, function(error) {
+	app.listen(config_general.express.port, config_general.express.ip, function(error) {
 		if (error) {
 			console.error("Unable to listen for connections", error);
 			process.exit(10);
 		}
 
-		console.info("express is listening on " + config.BASE_URL);
+		console.info("express is listening on " + appURL);
 	});
 }
