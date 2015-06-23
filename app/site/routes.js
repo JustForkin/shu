@@ -27,7 +27,7 @@ function check(req, res) {
 
 function setup(app) {
 
-	app.get('/:path([a-zA-Z]{3})', check);
+	app.get('/:path([a-zA-Z0-9]{1,10})', check);
 
 }
 
