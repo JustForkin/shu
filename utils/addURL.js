@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+var _          = require('underscore');
 var fs         = require('fs');
 var Hashids    = require('hashids');
 var argv       = require('yargs').argv;
@@ -10,13 +11,19 @@ var config     = require('../config/server');
 var URLsPath   = "data/urls.json";
 var newURLPath = null;
 
-function update(url, cb) {
+function update(url, path, cb) {
 	getURLs(function(data) {
 		if (!data) {
 			cb(true)
 		}
 
-		data.urls.push(getNewEntry(url, data.urls.length+1));
+		if (path) {
+			if (_.findWhere(data.urls, { id : path })) {
+				throw new Error('Sorry, that path is already in use...');
+			}
+		}
+
+		data.urls.push(getNewEntry(url, path, data.urls.length+1));
 
 		fs.writeFileSync(URLsPath, JSON.stringify(data, null, 4))
 
@@ -24,26 +31,29 @@ function update(url, cb) {
 	});
 }
 
-function getNewEntry(url, index) {
+function getNewEntry(url, path, index) {
 	var h = new Hashids(config.shortlinks.SALT, 3, config.shortlinks.ALPHABET);
-    var shortlink = h.encode(index);
+    var id = path ? path : h.encode(index);
 
-    newURLPath = shortlink;
+    var protocolRe = new RegExp('^https?:\/\/');
+    url = protocolRe.test(url) ? url.split(protocolRe)[1] : url;
+
+    newURLPath = id;
 
     return {
-		id      : shortlink,
+		id      : id,
 		index   : index,
 		url     : url,
 		created : new Date()
 	};
 }
 
-function updateAndUpload(url) {
+function updateAndUpload(url, path) {
 	if (!url) {
 		throw new Error('no url given...');
 	}
 
-	update(url, function(err) {
+	update(url, path, function(err) {
 		if (err) {
 			throw new Error('Issue adding new URL');
 		} else {
@@ -55,4 +65,4 @@ function updateAndUpload(url) {
 
 }
 
-updateAndUpload(argv.url);
+updateAndUpload(argv.url, argv.path);
