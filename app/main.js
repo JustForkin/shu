@@ -17,7 +17,7 @@ function spawn() {
 
 if (cluster.isMaster && process.env.NODE_ENV === 'production') {
 
-	for (var i = 0, len = count.length; i < len; i++) {
+	for (var i = 0; i < count; i++) {
 		spawn();
 	}
 
