@@ -4,11 +4,15 @@ var _          = require('underscore');
 var fs         = require('fs');
 var path       = require('path');
 var Hashids    = require('hashids');
-var argv       = require('yargs').argv;
 var clipboard  = require('copy-paste');
 var uploadToS3 = require('./uploadToS3');
 var getURLs    = require('../app/utils/getURLs');
 var config     = require('../config/server');
+
+var argv = require('yargs')
+	.alias('u', 'url')
+	.alias('p', 'path')
+	.argv;
 
 var protocolRe = new RegExp('^https?:\/\/');
 var URLsPath   = path.join(__dirname, "..", "urls.json");
@@ -82,4 +86,4 @@ function updateAndUpload(url, path) {
 
 }
 
-updateAndUpload((argv.url || argv.u), (argv.path || argv.p));
+updateAndUpload(argv.url, argv.path);
