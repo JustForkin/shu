@@ -6,7 +6,7 @@ var path       = require('path');
 var Hashids    = require('hashids');
 var clipboard  = require('copy-paste');
 var uploadToS3 = require('./uploadToS3');
-var getURLs    = require('../app/utils/getURLs');
+var getURLs    = require('./getURLs');
 
 var config_general = require('../config/general');
 var config_user    = require('../config/user');
