@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
-var fs             = require('fs');
-var s3             = require('s3');
-var getCredentials = require('./getCredentials');
+var fs = require('fs');
+var s3 = require('s3');
 
 var config_general = require('../config/general');
 var config_user    = require('../config/user');
@@ -30,9 +29,9 @@ function getClient(creds) {
         multipartUploadThreshold: 20971520, // this is the default (20 MB)
         multipartUploadSize: 15728640, // this is the default (15 MB)
         s3Options: {
-            accessKeyId: creds.aws.id,
-            secretAccessKey: creds.aws.key,
-            region : creds.aws.region
+            accessKeyId: creds.id,
+            secretAccessKey: creds.key,
+            region : creds.region
             // any other options are passed to new AWS.S3()
             // See: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/Config.html#constructor-property
         },
@@ -64,7 +63,7 @@ function startUploader(method, client, params, cb) {
 function uploadSingleFile(filePath, cb) {
     var creds, client, uploadParams;
 
-    creds        = getCredentials();
+    creds        = config_user.CREDENTIALS;
     client       = getClient(creds);
     uploadParams = getUploadParamsSingle(filePath, config_general.URLS_DATA_PATH, config_user.BUCKET);
 
