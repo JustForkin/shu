@@ -17,7 +17,7 @@ var argv = require('yargs')
 	.argv;
 
 var protocolRe = new RegExp('^https?:\/\/');
-var URLsPath   = path.join(__dirname, "..", "urls.json");
+var URLsPath   = path.join(__dirname, "..", "data/temp_urls.json");
 var newURL     = null;
 
 function update(url, path, cb) {

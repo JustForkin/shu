@@ -1,7 +1,7 @@
 var request = require('request');
 
-var config_general = require('../../config/general');
-var config_user    = require('../../config/user');
+var config_general = require('../config/general');
+var config_user    = require('../config/user');
 
 function getURLs(cb) {
 

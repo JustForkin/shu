@@ -1,5 +1,5 @@
 var _       = require('underscore');
-var getURLs = require('../utils/getURLs');
+var getURLs = require('../../utils/getURLs');
 
 function check(req, res) {
 
