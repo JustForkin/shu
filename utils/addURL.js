@@ -88,4 +88,4 @@ function updateAndUpload(url, path) {
 
 }
 
-updateAndUpload(argv.url, argv.path);
+updateAndUpload((argv._[0] || argv.url), argv.path);
