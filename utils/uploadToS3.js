@@ -16,8 +16,6 @@ function getUploadParamsSingle(localFile, remoteFilePath, bucket) {
         }
     };
 
-    console.log("params", params);
-
     return params;
 }
 
