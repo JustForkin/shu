@@ -19,7 +19,7 @@
   },
   "scripts": {
     "start": "cd app && nodemon main.js",
-    "postuninstall": "node utils/postuninstall.js"
+    "postinstall": "node utils/postInstall.js"
   },
   "bin": "./utils/addURL.js",
   "dependencies": {
